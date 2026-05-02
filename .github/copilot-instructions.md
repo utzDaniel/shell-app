@@ -24,57 +24,15 @@ Aplicação Angular que atua como **host shell** de uma arquitetura Micro Fronte
 
 ---
 
-## Remotes registrados
+## Documentação de referência
 
-Definidos em `public/federation.manifest.json`:
+Consulte sempre antes de implementar:
 
-| Remote | Porta | Rota protegida |
-|--------|-------|----------------|
-| `user-mf` | 4201 | `/users` — role `USER` |
-| `finance-mf` | 4202 | `/finance` — role `FINANCE` |
-| `dashboard-mf` | 4203 | `/dashboard` — role `DASHBOARD` |
-
-O gateway da API está em `environment.gatewayUrl` (`http://localhost:8090`).
-
----
-
-## Estrutura de pastas
-
-```
-src/app/
-  core/auth/          # AuthService, keycloak.init, roleGuard
-  layout/             # ShellLayoutComponent (menubar + router-outlet)
-  pages/              # home/, forbidden/
-src/environments/     # environment.ts / environment.production.ts
-public/
-  federation.manifest.json   # URLs dos remotes
-```
-
----
-
-## Convenções obrigatórias
-
-### Componentes
-- Usar **standalone components** — nunca NgModules
-- Selector prefixado com `app-` (ex.: `app-shell-layout`)
-- Template inline para componentes simples; arquivo `.html` separado quando o template exceder ~20 linhas
-
-### Autenticação e roles
-- Roles válidas definidas no tipo `AppRole` em `core/auth/auth.service.ts`: `'USER' | 'FINANCE' | 'DASHBOARD'`
-- Proteção de rotas sempre via `roleGuard(...roles)` de `core/auth/role.guard.ts`
-- Nunca acessar `Keycloak` diretamente fora de `AuthService` e `keycloak.init.ts`
-- Usar `provideKeycloak()` de `core/auth/keycloak.init.ts` — **não** importar `provideKeycloak` de `keycloak-angular` diretamente
-- Bearer token injetado automaticamente pelo `includeBearerTokenInterceptor` apenas para URLs que iniciem com `environment.gatewayUrl`
-- Para logout, usar `AuthService.logout()` — nunca chamar `keycloak.logout()` diretamente
-
-### Federation (Native Federation)
-- Novos remotes devem ser adicionados em `federation.manifest.json` e mapeados em `app.routes.ts` com `loadRemoteModule`
-- O shell nunca importa código-fonte dos remotes diretamente
-- Convenção de export dos remotes: `loadRemoteModule('remote-name', './Component').then(m => m.AppComponent)`
-
-### Signals e reatividade
-- Preferir Angular Signals (`signal`, `computed`, `effect`) a `BehaviorSubject`/`Observable` para estado local de componente
-- Usar `inject()` em vez de injeção por construtor
+- [Arquitetura](docs/architecture.md) — camadas, módulos, dependências externas e diagrama
+- [Convenções](docs/conventions.md) — standalone, signals, inject(), nomenclatura de artefatos
+- [Segurança](docs/security.md) — Keycloak, roles, roleGuard, Bearer token
+- [Federation](docs/federation.md) — Native Federation, remotes registrados, fluxo de adição
+- [Testes](docs/testing.md) — Karma + Jasmine, estrutura, nomenclatura, antipadrões
 
 ---
 
@@ -82,32 +40,12 @@ public/
 
 Para **toda** nova funcionalidade ou alteração, o Copilot DEVE:
 
-1. **Manter standalone** — não criar ou modificar NgModules
-2. **Respeitar o fluxo de auth** — proteger novas rotas com `roleGuard`; se precisar de nova role, adicioná-la ao tipo `AppRole`
-3. **Atualizar `federation.manifest.json`** ao registrar um novo remote
-4. **Criar testes unitários** com Karma + Jasmine para serviços e guards
+1. **Manter standalone** — não criar ou modificar NgModules → [Convenções](docs/conventions.md)
+2. **Respeitar o fluxo de auth** — proteger novas rotas com `roleGuard`; se precisar de nova role, adicioná-la ao tipo `AppRole` → [Segurança](docs/security.md)
+3. **Atualizar `federation.manifest.json`** ao registrar um novo remote → [Federation](docs/federation.md)
+4. **Criar testes unitários** com Karma + Jasmine para serviços e guards → [Testes](docs/testing.md)
    - Padrão de nome: `should<ComportamentoEsperado>`
 5. **Garantir que todos os testes passem** — regressões não são permitidas
+6. **Atualizar `docs/plans/README.md`** se um plano de execução foi concluído
 
 ---
-
-## Fluxo de adição de novo Micro Frontend
-
-```
-1. Adicionar entrada em public/federation.manifest.json
-2. Criar rota lazy em app.routes.ts com loadRemoteModule
-3. Aplicar roleGuard com a role necessária
-4. Adicionar item de menu em ShellLayoutComponent (se aplicável)
-5. Adicionar nova role em AppRole (se aplicável)
-```
-
----
-
-## Comandos úteis
-
-| Ação | Comando |
-|------|---------|
-| Iniciar dev server | `ng serve` |
-| Build produção | `ng build` |
-| Executar testes | `ng test` |
-| Subir infra local | `docker compose up -d` |
