@@ -1,0 +1,5 @@
+{
+  "user-mf": "http://localhost:4201/remoteEntry.json",
+  "finance-mf": "http://localhost:4202/remoteEntry.json",
+  "dashboard-mf": "http://localhost:4203/remoteEntry.json"
+}

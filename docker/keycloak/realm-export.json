@@ -1,0 +1,136 @@
+{
+  "realm": "development",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      {
+        "name": "USER",
+        "description": "Permite acesso ao user-mf (verificado pelo shell-app)"
+      },
+      {
+        "name": "FINANCE",
+        "description": "Permite acesso ao finance-mf (verificado pelo shell-app)"
+      },
+      {
+        "name": "DASHBOARD",
+        "description": "Permite acesso ao dashboard-mf (verificado pelo shell-app)"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "shell-app",
+      "name": "Shell App (Angular)",
+      "publicClient": true,
+      "redirectUris": [
+        "http://localhost:4200/*"
+      ],
+      "webOrigins": [
+        "http://localhost:4200"
+      ],
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      }
+    },
+    {
+      "clientId": "dev-client",
+      "name": "Backend Service Client",
+      "publicClient": false,
+      "secret": "change-me",
+      "redirectUris": ["*"],
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": true,
+      "optionalClientScopes": [
+        "user.read",
+        "user.write",
+        "finance.read",
+        "finance.write"
+      ]
+    }
+  ],
+  "clientScopes": [
+    {
+      "name": "user.read",
+      "description": "Leitura de dados de usuários",
+      "protocol": "openid-connect",
+      "attributes": { "include.in.token.scope": "true" },
+      "protocolMappers": [
+        {
+          "name": "user.read",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-hardcoded-claim-mapper",
+          "config": {
+            "claim.name": "scope",
+            "claim.value": "user.read",
+            "access.token.claim": "true",
+            "id.token.claim": "false",
+            "userinfo.token.claim": "false"
+          }
+        }
+      ]
+    },
+    {
+      "name": "user.write",
+      "description": "Criação e atualização de dados de usuários",
+      "protocol": "openid-connect",
+      "attributes": { "include.in.token.scope": "true" },
+      "protocolMappers": [
+        {
+          "name": "user.write",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-hardcoded-claim-mapper",
+          "config": {
+            "claim.name": "scope",
+            "claim.value": "user.write",
+            "access.token.claim": "true",
+            "id.token.claim": "false",
+            "userinfo.token.claim": "false"
+          }
+        }
+      ]
+    },
+    {
+      "name": "finance.read",
+      "description": "Leitura de dados financeiros",
+      "protocol": "openid-connect",
+      "attributes": { "include.in.token.scope": "true" },
+      "protocolMappers": [
+        {
+          "name": "finance.read",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-hardcoded-claim-mapper",
+          "config": {
+            "claim.name": "scope",
+            "claim.value": "finance.read",
+            "access.token.claim": "true",
+            "id.token.claim": "false",
+            "userinfo.token.claim": "false"
+          }
+        }
+      ]
+    },
+    {
+      "name": "finance.write",
+      "description": "Criação e atualização de dados financeiros",
+      "protocol": "openid-connect",
+      "attributes": { "include.in.token.scope": "true" },
+      "protocolMappers": [
+        {
+          "name": "finance.write",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-hardcoded-claim-mapper",
+          "config": {
+            "claim.name": "scope",
+            "claim.value": "finance.write",
+            "access.token.claim": "true",
+            "id.token.claim": "false",
+            "userinfo.token.claim": "false"
+          }
+        }
+      ]
+    }
+  ],
+  "users": []
+}
