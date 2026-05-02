@@ -1,0 +1,137 @@
+<div class="home-container">
+
+  <!-- Welcome header -->
+  <div class="home-welcome">
+    <h1 class="home-welcome-title">👋 Bem-vindo, {{ firstName() }}!</h1>
+    <p class="home-welcome-subtitle">Selecione uma opção no menu para começar.</p>
+  </div>
+
+  <!-- Module cards -->
+  <div class="home-cards">
+    @if (authService.hasDashboardRole()) {
+      <a class="home-card" routerLink="/dashboard">
+        <div class="home-card-icon home-card-icon--blue">
+          <i class="pi pi-chart-bar"></i>
+        </div>
+        <div class="home-card-body">
+          <h3 class="home-card-title home-card-title--blue">Dashboard</h3>
+          <p class="home-card-desc">Acompanhe os principais indicadores e métricas do sistema.</p>
+        </div>
+        <i class="pi pi-chevron-right home-card-arrow"></i>
+      </a>
+    }
+
+    @if (authService.hasFinanceRole()) {
+      <a class="home-card" routerLink="/finance">
+        <div class="home-card-icon home-card-icon--green">
+          <i class="pi pi-dollar"></i>
+        </div>
+        <div class="home-card-body">
+          <h3 class="home-card-title home-card-title--green">Finança</h3>
+          <p class="home-card-desc">Gerencie receitas, despesas e movimentações financeiras.</p>
+        </div>
+        <i class="pi pi-chevron-right home-card-arrow"></i>
+      </a>
+    }
+
+    @if (authService.hasUserRole()) {
+      <a class="home-card" routerLink="/users">
+        <div class="home-card-icon home-card-icon--purple">
+          <i class="pi pi-user"></i>
+        </div>
+        <div class="home-card-body">
+          <h3 class="home-card-title home-card-title--purple">Perfil</h3>
+          <p class="home-card-desc">Visualize e atualize seus dados pessoais e preferências.</p>
+        </div>
+        <i class="pi pi-chevron-right home-card-arrow"></i>
+      </a>
+    }
+  </div>
+
+  <!-- Bottom panels -->
+  <div class="home-panels">
+
+    <!-- Atividades recentes -->
+    <div class="home-panel">
+      <h2 class="home-panel-title">Atividades recentes</h2>
+      <ul class="activity-list">
+        @for (activity of recentActivities(); track activity.id) {
+          <li class="activity-item">
+            <div class="activity-icon" [style.background]="activity.iconBg">
+              <i class="pi" [class]="activity.icon" [style.color]="activity.iconColor"></i>
+            </div>
+            <div class="activity-info">
+              <span class="activity-title">{{ activity.title }}</span>
+              <span class="activity-meta">{{ activity.category }} &bull; {{ activity.date | date:'dd/MM/yyyy HH:mm' }}</span>
+            </div>
+            <span class="activity-badge">Concluído</span>
+          </li>
+        }
+      </ul>
+      <a class="home-panel-link" href="#">
+        <span>Ver todas as atividades</span>
+        <i class="pi pi-chevron-right"></i>
+      </a>
+    </div>
+
+    <!-- Status do sistema -->
+    <div class="home-panel">
+      <h2 class="home-panel-title">Status do sistema</h2>
+      <ul class="status-list">
+        <li class="status-item">
+          <div class="status-icon-wrap status-icon-wrap--teal">
+            <i class="pi pi-shield"></i>
+          </div>
+          <div class="status-info">
+            <span class="status-name">Autenticação (Keycloak)</span>
+            <span class="status-desc">Serviço de autenticação</span>
+          </div>
+          <span class="status-dot" [class.status-dot--online]="systemStatus.keycloakStatus() === 'online'"
+                                   [class.status-dot--offline]="systemStatus.keycloakStatus() === 'offline'"
+                                   [class.status-dot--checking]="systemStatus.keycloakStatus() === 'checking'">
+          </span>
+          <span class="status-label" [class.status-label--online]="systemStatus.keycloakStatus() === 'online'"
+                                     [class.status-label--offline]="systemStatus.keycloakStatus() === 'offline'">
+            {{ systemStatus.keycloakStatus() | titlecase }}
+          </span>
+        </li>
+        <li class="status-item">
+          <div class="status-icon-wrap status-icon-wrap--teal">
+            <i class="pi pi-sitemap"></i>
+          </div>
+          <div class="status-info">
+            <span class="status-name">Gateway API</span>
+            <span class="status-desc">Roteamento e validação</span>
+          </div>
+          <span class="status-dot" [class.status-dot--online]="systemStatus.gatewayStatus() === 'online'"
+                                   [class.status-dot--offline]="systemStatus.gatewayStatus() === 'offline'"
+                                   [class.status-dot--checking]="systemStatus.gatewayStatus() === 'checking'">
+          </span>
+          <span class="status-label" [class.status-label--online]="systemStatus.gatewayStatus() === 'online'"
+                                     [class.status-label--offline]="systemStatus.gatewayStatus() === 'offline'">
+            {{ systemStatus.gatewayStatus() | titlecase }}
+          </span>
+        </li>
+        <li class="status-item">
+          <div class="status-icon-wrap status-icon-wrap--teal">
+            <i class="pi pi-database"></i>
+          </div>
+          <div class="status-info">
+            <span class="status-name">Serviços de Negócio</span>
+            <span class="status-desc">APIs e bancos de dados</span>
+          </div>
+          <span class="status-dot" [class.status-dot--online]="systemStatus.servicesStatus() === 'online'"
+                                   [class.status-dot--offline]="systemStatus.servicesStatus() === 'offline'"
+                                   [class.status-dot--checking]="systemStatus.servicesStatus() === 'checking'">
+          </span>
+          <span class="status-label" [class.status-label--online]="systemStatus.servicesStatus() === 'online'"
+                                     [class.status-label--offline]="systemStatus.servicesStatus() === 'offline'">
+            {{ systemStatus.servicesStatus() | titlecase }}
+          </span>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+</div>

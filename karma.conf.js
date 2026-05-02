@@ -1,3 +1,5 @@
+process.env.CHROME_BIN = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
+
 module.exports = function (config) {
   config.set({
     basePath: '',
@@ -22,11 +24,10 @@ module.exports = function (config) {
       reporters: [{ type: 'html' }, { type: 'text-summary' }],
     },
     reporters: ['progress', 'kjhtml'],
-    browsers: ['EdgeChromiumHeadless'],
+    browsers: ['EdgeHeadless'],
     customLaunchers: {
-      EdgeChromiumHeadless: {
+      EdgeHeadless: {
         base: 'ChromeHeadless',
-        // Edge (Chromium) é compatível com o ChromeHeadless launcher
         flags: ['--no-sandbox', '--disable-gpu'],
       },
     },

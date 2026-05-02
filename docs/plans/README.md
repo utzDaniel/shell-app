@@ -6,7 +6,8 @@ Status key: `draft`, `approved`, `done`
 
 ## Planos disponíveis
 
-- [Infra setup](2026-05-02-initial-setup.md) — Plano inicial do sistema
+- [Infra setup](2026-05-02-initial-setup.md) — Plano inicial do sistema — `done`
+- [Redesign Shell Layout & Home Page](2026-05-02-pagina-inicial.md) — Sidebar colapsável, header, home com cards de módulos, atividades recentes e status do sistema — `done`
 
 ## Como usar
 

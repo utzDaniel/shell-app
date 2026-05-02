@@ -43,12 +43,14 @@ export class AuthService {
     const realmRoles = (tokenParsed?.['realm_access']?.['roles'] ?? []) as AppRole[];
     this._roles.set(realmRoles);
 
-    try {
-      const profile = await this.keycloak.loadUserProfile();
-      this._profile.set(profile);
-    } catch {
-      this._profile.set(null);
-    }
+    const profile: KeycloakProfile = {
+      id:        tokenParsed?.['sub'],
+      username:  tokenParsed?.['preferred_username'],
+      firstName: tokenParsed?.['given_name'],
+      lastName:  tokenParsed?.['family_name'],
+      email:     tokenParsed?.['email'],
+    };
+    this._profile.set(profile);
   }
 
   hasRole(role: AppRole): boolean {

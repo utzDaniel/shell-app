@@ -1,76 +1,59 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { CardModule } from 'primeng/card';
-import { ButtonModule } from 'primeng/button';
+import { DatePipe, TitleCasePipe } from '@angular/common';
 import { AuthService } from '../../core/auth/auth.service';
+import { SystemStatusService } from '../../core/system-status/system-status.service';
+
+export interface RecentActivity {
+  id: number;
+  title: string;
+  category: string;
+  date: Date;
+  icon: string;
+  iconBg: string;
+  iconColor: string;
+}
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, CardModule, ButtonModule],
-  template: `
-    <div class="home-container">
-      <h1 class="home-title">Bem-vindo, {{ username() }}!</h1>
-      <p class="home-subtitle">Selecione um módulo para começar.</p>
-
-      <div class="home-cards">
-        @if (authService.hasUserRole()) {
-          <p-card header="Usuários" subheader="Gerenciamento de usuários" styleClass="home-card">
-            <ng-template pTemplate="footer">
-              <p-button label="Acessar" icon="pi pi-users" routerLink="/users" />
-            </ng-template>
-          </p-card>
-        }
-
-        @if (authService.hasFinanceRole()) {
-          <p-card header="Finanças" subheader="Gestão financeira" styleClass="home-card">
-            <ng-template pTemplate="footer">
-              <p-button label="Acessar" icon="pi pi-wallet" routerLink="/finance" />
-            </ng-template>
-          </p-card>
-        }
-
-        @if (authService.hasDashboardRole()) {
-          <p-card header="Dashboard" subheader="Visão analítica" styleClass="home-card">
-            <ng-template pTemplate="footer">
-              <p-button label="Acessar" icon="pi pi-chart-bar" routerLink="/dashboard" />
-            </ng-template>
-          </p-card>
-        }
-
-        @if (!authService.hasUserRole() && !authService.hasFinanceRole() && !authService.hasDashboardRole()) {
-          <p class="home-no-access">Você não possui acesso a nenhum módulo. Contate o administrador.</p>
-        }
-      </div>
-    </div>
-  `,
-  styles: [`
-    .home-container {
-      max-width: 960px;
-      margin: 2rem auto;
-    }
-    .home-title {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-    .home-subtitle {
-      color: var(--p-text-muted-color);
-      margin-bottom: 2rem;
-    }
-    .home-cards {
-      display: flex;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .home-no-access {
-      color: var(--p-text-muted-color);
-      font-style: italic;
-    }
-  `],
+  imports: [RouterLink, DatePipe, TitleCasePipe],
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.scss',
 })
 export class HomeComponent {
   protected readonly authService = inject(AuthService);
+  protected readonly systemStatus = inject(SystemStatusService);
 
-  readonly username = computed(() => this.authService.profile()?.firstName ?? 'Usuário');
+  readonly firstName = computed(() => this.authService.profile()?.firstName ?? 'Usuário');
+
+  readonly recentActivities = signal<RecentActivity[]>([
+    {
+      id: 1,
+      title: 'Lançamento de despesa',
+      category: 'Financeiro',
+      date: new Date('2025-05-16T14:22:00'),
+      icon: 'pi-dollar',
+      iconBg: '#dcfce7',
+      iconColor: '#16a34a',
+    },
+    {
+      id: 2,
+      title: 'Relatório gerado',
+      category: 'Dashboard',
+      date: new Date('2025-05-16T14:15:00'),
+      icon: 'pi-chart-bar',
+      iconBg: '#dbeafe',
+      iconColor: '#2563eb',
+    },
+    {
+      id: 3,
+      title: 'Perfil atualizado',
+      category: 'Perfil',
+      date: new Date('2025-05-16T13:58:00'),
+      icon: 'pi-user',
+      iconBg: '#ede9fe',
+      iconColor: '#7c3aed',
+    },
+  ]);
 }

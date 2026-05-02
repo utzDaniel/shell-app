@@ -1,107 +1,54 @@
-import { Component, computed, inject } from '@angular/core';
-import { Router, RouterOutlet } from '@angular/router';
-import { MenubarModule } from 'primeng/menubar';
-import { ButtonModule } from 'primeng/button';
+import { Component, computed, inject, signal, OnDestroy } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { DatePipe } from '@angular/common';
 import { AvatarModule } from 'primeng/avatar';
-import { MenuItem } from 'primeng/api';
+import { BadgeModule } from 'primeng/badge';
 import { AuthService } from '../core/auth/auth.service';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-shell-layout',
   standalone: true,
-  imports: [RouterOutlet, MenubarModule, ButtonModule, AvatarModule],
-  template: `
-    <div class="shell-container">
-      <p-menubar [model]="menuItems()" styleClass="shell-menubar">
-        <ng-template pTemplate="start">
-          <span class="shell-brand">MyApp</span>
-        </ng-template>
-        <ng-template pTemplate="end">
-          <div class="shell-user-area">
-            <p-avatar
-              [label]="userInitial()"
-              shape="circle"
-              styleClass="mr-2"
-            />
-            <span class="shell-username">{{ username() }}</span>
-            <p-button
-              label="Sair"
-              icon="pi pi-sign-out"
-              severity="secondary"
-              [text]="true"
-              (onClick)="logout()"
-            />
-          </div>
-        </ng-template>
-      </p-menubar>
-
-      <main class="shell-content">
-        <router-outlet />
-      </main>
-    </div>
-  `,
-  styles: [`
-    .shell-container {
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    .shell-brand {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--p-primary-color);
-      margin-right: 1rem;
-    }
-    .shell-user-area {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .shell-username {
-      font-weight: 500;
-    }
-    .shell-content {
-      flex: 1;
-      padding: 1.5rem;
-    }
-  `],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, DatePipe, AvatarModule, BadgeModule],
+  templateUrl: './shell-layout.component.html',
+  styleUrl: './shell-layout.component.scss',
 })
-export class ShellLayoutComponent {
-  private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
+export class ShellLayoutComponent implements OnDestroy {
+  readonly authService = inject(AuthService);
 
-  readonly menuItems = computed<MenuItem[]>(() => {
-    const items: MenuItem[] = [
-      {
-        label: 'Home',
-        icon: 'pi pi-home',
-        routerLink: '/home',
-      },
-    ];
+  readonly envName = environment.envName;
 
-    if (this.authService.hasUserRole()) {
-      items.push({ label: 'Usuários', icon: 'pi pi-users', routerLink: '/users' });
-    }
+  readonly sidebarCollapsed = signal(false);
 
-    if (this.authService.hasFinanceRole()) {
-      items.push({ label: 'Finanças', icon: 'pi pi-wallet', routerLink: '/finance' });
-    }
+  readonly currentTime = signal(new Date());
 
-    if (this.authService.hasDashboardRole()) {
-      items.push({ label: 'Dashboard', icon: 'pi pi-chart-bar', routerLink: '/dashboard' });
-    }
+  private readonly _timer = setInterval(() => this.currentTime.set(new Date()), 1000);
 
-    return items;
+  readonly fullName = computed(() => {
+    const profile = this.authService.profile();
+    if (!profile) return 'Usuário';
+    const first = profile.firstName ?? '';
+    const last = profile.lastName ?? '';
+    return `${first} ${last}`.trim() || profile.username || 'Usuário';
   });
 
-  readonly username = computed(() => this.authService.profile()?.username ?? 'Usuário');
-
-  readonly userInitial = computed(() => {
-    const name = this.authService.profile()?.firstName ?? this.username();
-    return name.charAt(0).toUpperCase();
+  readonly userInitials = computed(() => {
+    const profile = this.authService.profile();
+    if (!profile) return 'U';
+    const first = (profile.firstName ?? '').charAt(0).toUpperCase();
+    const last = (profile.lastName ?? '').charAt(0).toUpperCase();
+    return first && last ? `${first}${last}` : first || 'U';
   });
+
+  toggleSidebar(): void {
+    this.sidebarCollapsed.update((v) => !v);
+  }
 
   logout(): void {
     this.authService.logout();
+  }
+
+  ngOnDestroy(): void {
+    clearInterval(this._timer);
   }
 }

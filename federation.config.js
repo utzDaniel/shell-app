@@ -16,6 +16,8 @@ module.exports = withNativeFederation({
     '@oxc-parser/binding-win32-x64-msvc',
     'chart.js',
     'chart.js/auto',
+    '@primeng/themes',
+    '@primeng/themes/aura',
     '@primeng/themes/types',
     'primeicons',
   ],
