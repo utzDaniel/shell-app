@@ -32,7 +32,7 @@ ShellLayoutComponent
 
 | Serviço | Função | Porta |
 |---------|--------|-------|
-| Keycloak | IdP — emite JWT / autentica usuários | 8080 |
+| Keycloak | IdP — emite JWT / autentica usuários | 9999 |
 | API Gateway | Backend BFF — recebe requisições dos remotes | 8090 |
 | user-mf | Micro Frontend de usuários | 4201 |
 | finance-mf | Micro Frontend financeiro | 4202 |
@@ -45,7 +45,7 @@ ShellLayoutComponent
       |
       v
  shell-app :4200  (Angular Host)
-  +-- autentica   --> Keycloak :8080
+  +-- autentica   --> Keycloak :9999
   +-- carrega     --> remoteEntry.json de cada MFE
   +-- requisições --> API Gateway :8090 (+ Bearer token automático)
        |

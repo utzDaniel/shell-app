@@ -10,7 +10,7 @@ Fluxo: Usuário → Keycloak (login / emite JWT) → shell-app (valida sessão e
 
 | Configuração | Valor (desenvolvimento) |
 |--------------|------------------------|
-| URL | `http://localhost:8080` |
+| URL | `http://localhost:9999` |
 | Realm | `development` |
 | Client ID | `shell-app` |
 | PKCE | S256 |
