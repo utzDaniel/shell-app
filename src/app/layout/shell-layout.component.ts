@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal, OnDestroy } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { AvatarModule } from 'primeng/avatar';
@@ -13,16 +13,14 @@ import { environment } from '../../environments/environment';
   templateUrl: './shell-layout.component.html',
   styleUrl: './shell-layout.component.scss',
 })
-export class ShellLayoutComponent implements OnDestroy {
+export class ShellLayoutComponent {
   readonly authService = inject(AuthService);
 
   readonly envName = environment.envName;
 
   readonly sidebarCollapsed = signal(false);
 
-  readonly currentTime = signal(new Date());
-
-  private readonly _timer = setInterval(() => this.currentTime.set(new Date()), 1000);
+  readonly currentTime = computed(() => this.authService.loginTime() ?? new Date());
 
   readonly fullName = computed(() => {
     const profile = this.authService.profile();
@@ -48,7 +46,4 @@ export class ShellLayoutComponent implements OnDestroy {
     this.authService.logout();
   }
 
-  ngOnDestroy(): void {
-    clearInterval(this._timer);
-  }
 }

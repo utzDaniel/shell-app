@@ -11,9 +11,11 @@ export class AuthService {
 
   private readonly _roles = signal<AppRole[]>([]);
   private readonly _profile = signal<KeycloakProfile | null>(null);
+  private readonly _loginTime = signal<Date | null>(null);
 
   readonly roles: Signal<AppRole[]> = this._roles.asReadonly();
   readonly profile: Signal<KeycloakProfile | null> = this._profile.asReadonly();
+  readonly loginTime: Signal<Date | null> = this._loginTime.asReadonly();
 
   readonly isAuthenticated: Signal<boolean> = computed(() => {
     const event = this.keycloakEvent();
@@ -42,6 +44,9 @@ export class AuthService {
     const tokenParsed = this.keycloak.tokenParsed;
     const realmRoles = (tokenParsed?.['realm_access']?.['roles'] ?? []) as AppRole[];
     this._roles.set(realmRoles);
+
+    const iat = tokenParsed?.['iat'] as number | undefined;
+    this._loginTime.set(iat ? new Date(iat * 1000) : new Date());
 
     const profile: KeycloakProfile = {
       id:        tokenParsed?.['sub'],
