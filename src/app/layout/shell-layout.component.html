@@ -26,7 +26,7 @@
 
       <div class="sidebar-section-label">MÓDULOS</div>
       <ul class="sidebar-nav-list">
-        @if (authService.hasDashboardRole()) {
+        @if (authService.hasDashboardRole() || authService.hasAdminRole()) {
           <li>
             <a class="sidebar-nav-item" routerLink="/dashboard" routerLinkActive="active">
               <i class="pi pi-chart-bar sidebar-nav-icon"></i>
@@ -35,7 +35,7 @@
             </a>
           </li>
         }
-        @if (authService.hasFinanceRole()) {
+        @if (authService.hasFinanceRole() || authService.hasAdminRole()) {
           <li>
             <a class="sidebar-nav-item" routerLink="/finance" routerLinkActive="active">
               <i class="pi pi-dollar sidebar-nav-icon"></i>
@@ -44,7 +44,7 @@
             </a>
           </li>
         }
-        @if (authService.hasUserRole()) {
+        @if (authService.hasUserRole() || authService.hasAdminRole()) {
           <li>
             <a class="sidebar-nav-item" routerLink="/users" routerLinkActive="active">
               <i class="pi pi-user sidebar-nav-icon"></i>

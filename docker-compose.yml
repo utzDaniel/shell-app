@@ -3,6 +3,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        CONFIG: development
     container_name: shell-app
     ports:
       - "4200:80"

@@ -26,10 +26,11 @@ Fluxo: Usuário → Keycloak (login / emite JWT) → shell-app (valida sessão e
 | `USER` | `/users` | `user-mf` |
 | `FINANCE` | `/finance` | `finance-mf` |
 | `DASHBOARD` | `/dashboard` | `dashboard-mf` |
+| `ADMIN` | acesso global | N/A |
 
 Roles são do tipo `AppRole` definido em `core/auth/auth.service.ts`:
 ```typescript
-export type AppRole = 'USER' | 'FINANCE' | 'DASHBOARD';
+export type AppRole = 'USER' | 'FINANCE' | 'DASHBOARD' | 'ADMIN';
 ```
 
 ## Proteção de Rotas

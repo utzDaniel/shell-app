@@ -2,7 +2,7 @@ import { computed, effect, inject, Injectable, Signal, signal } from '@angular/c
 import { KEYCLOAK_EVENT_SIGNAL, KeycloakEventType } from 'keycloak-angular';
 import Keycloak, { KeycloakProfile } from 'keycloak-js';
 
-export type AppRole = 'USER' | 'FINANCE' | 'DASHBOARD';
+export type AppRole = 'USER' | 'FINANCE' | 'DASHBOARD' | 'ADMIN';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -27,6 +27,7 @@ export class AuthService {
   readonly hasUserRole: Signal<boolean> = computed(() => this._roles().includes('USER'));
   readonly hasFinanceRole: Signal<boolean> = computed(() => this._roles().includes('FINANCE'));
   readonly hasDashboardRole: Signal<boolean> = computed(() => this._roles().includes('DASHBOARD'));
+  readonly hasAdminRole: Signal<boolean> = computed(() => this._roles().includes('ADMIN'));
 
   constructor() {
     // Carrega dados do usuário automaticamente ao autenticar

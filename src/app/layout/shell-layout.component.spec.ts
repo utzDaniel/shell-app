@@ -12,14 +12,20 @@ describe('ShellLayoutComponent', () => {
   const hasUserRole = signal(false);
   const hasFinanceRole = signal(false);
   const hasDashboardRole = signal(false);
+  const hasAdminRole = signal(false);
   const profile = signal<any>(null);
+  const loginTime = signal<Date | null>(null);
+  const isAuthenticated = signal(true);
   const logoutSpy = jasmine.createSpy('logout');
 
   const authServiceMock = {
     hasUserRole,
     hasFinanceRole,
     hasDashboardRole,
+    hasAdminRole,
     profile,
+    loginTime,
+    isAuthenticated,
     logout: logoutSpy,
   };
 
@@ -27,7 +33,10 @@ describe('ShellLayoutComponent', () => {
     hasUserRole.set(false);
     hasFinanceRole.set(false);
     hasDashboardRole.set(false);
+    hasAdminRole.set(false);
     profile.set(null);
+    loginTime.set(null);
+    isAuthenticated.set(true);
     logoutSpy.calls.reset();
 
     await TestBed.configureTestingModule({

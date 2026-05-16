@@ -4,6 +4,10 @@ import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppRole } from './auth.service';
 
+export function hasRequiredAccess(grantedRoles: string[], requiredRoles: AppRole[]): boolean {
+  return grantedRoles.includes('ADMIN') || requiredRoles.some(role => grantedRoles.includes(role));
+}
+
 export function roleGuard(...requiredRoles: AppRole[]): CanActivateFn {
   return createAuthGuard<CanActivateFn>(async (_route, _state, authData: AuthGuardData) => {
     const router = inject(Router);
@@ -13,11 +17,7 @@ export function roleGuard(...requiredRoles: AppRole[]): CanActivateFn {
       return false; // provideKeycloak com onLoad:'login-required' redireciona automaticamente
     }
 
-    const hasAccess = requiredRoles.every(role =>
-      grantedRoles.realmRoles.includes(role)
-    );
-
-    if (!hasAccess) {
+    if (!hasRequiredAccess(grantedRoles.realmRoles, requiredRoles)) {
       return router.parseUrl('/forbidden');
     }
 
