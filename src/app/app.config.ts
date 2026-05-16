@@ -18,11 +18,11 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes, withComponentInputBinding()),
     provideAnimationsAsync(),
-    // Interceptor funcional: adiciona Bearer token apenas para o gateway
+    // Interceptor: injeta Bearer token nas chamadas ao backend (compartilhado com os MFEs via singleton)
     provideHttpClient(withInterceptors([includeBearerTokenInterceptor])),
     {
       provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
-      useValue: [{ urlPattern: new RegExp(`^${environment.gatewayUrl}`) }],
+      useValue: environment.backendUrls.map((url) => ({ urlPattern: new RegExp(`^${url}`) })),
     },
     providePrimeNG({
       theme: {

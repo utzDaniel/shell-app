@@ -14,8 +14,8 @@ describe('HomeComponent', () => {
   const profile = signal<any>(null);
 
   const keycloakStatus = signal<'online' | 'offline' | 'checking'>('checking');
-  const gatewayStatus = signal<'online' | 'offline' | 'checking'>('checking');
-  const servicesStatus = signal<'online' | 'offline' | 'checking'>('checking');
+  const userApiStatus = signal<'online' | 'offline' | 'checking'>('checking');
+  const financeApiStatus = signal<'online' | 'offline' | 'checking'>('checking');
 
   const authServiceMock = {
     hasUserRole,
@@ -26,8 +26,8 @@ describe('HomeComponent', () => {
 
   const systemStatusMock = {
     keycloakStatus,
-    gatewayStatus,
-    servicesStatus,
+    userApiStatus,
+    financeApiStatus,
   };
 
   beforeEach(async () => {
@@ -36,8 +36,8 @@ describe('HomeComponent', () => {
     hasDashboardRole.set(false);
     profile.set(null);
     keycloakStatus.set('checking');
-    gatewayStatus.set('checking');
-    servicesStatus.set('checking');
+    userApiStatus.set('checking');
+    financeApiStatus.set('checking');
 
     await TestBed.configureTestingModule({
       imports: [HomeComponent],
@@ -80,7 +80,7 @@ describe('HomeComponent', () => {
 
   it('shouldDisplaySystemStatusFromService', () => {
     keycloakStatus.set('online');
-    gatewayStatus.set('offline');
+    financeApiStatus.set('offline');
     fixture.detectChanges();
 
     const statusLabels = fixture.nativeElement.querySelectorAll('.status-label');

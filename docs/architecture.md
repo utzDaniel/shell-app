@@ -33,7 +33,6 @@ ShellLayoutComponent
 | Serviço | Função | Porta |
 |---------|--------|-------|
 | Keycloak | IdP — emite JWT / autentica usuários | 9999 |
-| API Gateway | Backend BFF — recebe requisições dos remotes | 8090 |
 | user-mf | Micro Frontend de usuários | 4201 |
 | finance-mf | Micro Frontend financeiro | 4202 |
 | dashboard-mf | Micro Frontend de dashboard | 4203 |
@@ -45,13 +44,13 @@ ShellLayoutComponent
       |
       v
  shell-app :4200  (Angular Host)
-  +-- autentica   --> Keycloak :9999
-  +-- carrega     --> remoteEntry.json de cada MFE
-  +-- requisições --> API Gateway :8090 (+ Bearer token automático)
+  +-- autentica       --> Keycloak :9999
+  +-- carrega         --> remoteEntry.json de cada MFE
+  +-- Bearer token    --> injetado via interceptor em todas as chamadas a :8090
        |
-       +-- user-mf     :4201
-       +-- finance-mf  :4202
-       +-- dashboard-mf:4203
+       +-- user-mf     :4201  --> backend :8090
+       +-- finance-mf  :4202  --> backend :8090
+       +-- dashboard-mf:4203  --> backend :8090
 ```
 
 ## Fluxo de Autenticação
@@ -60,4 +59,4 @@ ShellLayoutComponent
 2. Keycloak retorna JWT com `realm_access.roles`
 3. `AuthService` extrai roles do token e as disponibiliza via Signals
 4. `roleGuard` protege rotas e redireciona para `/forbidden` em caso de acesso negado
-5. `includeBearerTokenInterceptor` injeta Bearer token em requisições ao `gatewayUrl`
+5. `includeBearerTokenInterceptor` injeta Bearer token em chamadas ao `backendUrl` — compartilhado com os MFEs via `HttpClient` singleton

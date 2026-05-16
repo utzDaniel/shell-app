@@ -1,0 +1,14 @@
+{
+  "/proxy/user-api": {
+    "target": "http://localhost:8081",
+    "pathRewrite": { "^/proxy/user-api": "" },
+    "changeOrigin": true,
+    "secure": false
+  },
+  "/proxy/finance-api": {
+    "target": "http://localhost:8082",
+    "pathRewrite": { "^/proxy/finance-api": "" },
+    "changeOrigin": true,
+    "secure": false
+  }
+}

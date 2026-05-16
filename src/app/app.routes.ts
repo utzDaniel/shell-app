@@ -20,10 +20,10 @@ export const routes: Routes = [
         component: HomeComponent,
       },
       {
-        path: 'users',
+        path: 'perfil',
         canActivate: [roleGuard('USER')],
-        loadComponent: () =>
-          loadRemoteModule('user-mf', './Component').then(m => m.AppComponent),
+        loadChildren: () =>
+          loadRemoteModule('user-mf', './Routes').then(m => m.routes),
       },
       {
         path: 'finance',

@@ -10,8 +10,8 @@ export class SystemStatusService {
   private readonly http = inject(HttpClient);
 
   readonly keycloakStatus = signal<ServiceStatus>('checking');
-  readonly gatewayStatus = signal<ServiceStatus>('checking');
-  readonly servicesStatus = signal<ServiceStatus>('checking');
+  readonly userApiStatus = signal<ServiceStatus>('checking');
+  readonly financeApiStatus = signal<ServiceStatus>('checking');
 
   constructor() {
     this.checkAll();
@@ -19,8 +19,8 @@ export class SystemStatusService {
 
   checkAll(): void {
     this.keycloakStatus.set('checking');
-    this.gatewayStatus.set('checking');
-    this.servicesStatus.set('checking');
+    this.userApiStatus.set('checking');
+    this.financeApiStatus.set('checking');
 
     this.http
       .get(environment.healthChecks.keycloak)
@@ -28,13 +28,13 @@ export class SystemStatusService {
       .subscribe((res) => this.keycloakStatus.set(res !== null ? 'online' : 'offline'));
 
     this.http
-      .get(environment.healthChecks.gateway)
+      .get(environment.healthChecks.userApi)
       .pipe(catchError(() => of(null)))
-      .subscribe((res) => this.gatewayStatus.set(res !== null ? 'online' : 'offline'));
+      .subscribe((res) => this.userApiStatus.set(res !== null ? 'online' : 'offline'));
 
     this.http
-      .get(environment.healthChecks.services)
+      .get(environment.healthChecks.financeApi)
       .pipe(catchError(() => of(null)))
-      .subscribe((res) => this.servicesStatus.set(res !== null ? 'online' : 'offline'));
+      .subscribe((res) => this.financeApiStatus.set(res !== null ? 'online' : 'offline'));
   }
 }

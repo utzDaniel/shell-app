@@ -27,8 +27,8 @@ describe('SystemStatusService', () => {
     setup(false);
     // Antes do flush das requests do constructor os signals devem ser 'checking'
     expect(service.keycloakStatus()).toBe('checking');
-    expect(service.gatewayStatus()).toBe('checking');
-    expect(service.servicesStatus()).toBe('checking');
+    expect(service.userApiStatus()).toBe('checking');
+    expect(service.financeApiStatus()).toBe('checking');
     // Flush para limpar
     httpMock.match(() => true).forEach((req) => req.flush({}));
   });
@@ -40,15 +40,15 @@ describe('SystemStatusService', () => {
     const keycloakReq = httpMock.expectOne(environment.healthChecks.keycloak);
     keycloakReq.flush({ status: 'UP' });
 
-    const gatewayReq = httpMock.expectOne(environment.healthChecks.gateway);
-    gatewayReq.flush({ status: 'UP' });
+    const userApiReq = httpMock.expectOne(environment.healthChecks.userApi);
+    userApiReq.flush({ status: 'UP' });
 
-    const servicesReq = httpMock.expectOne(environment.healthChecks.services);
-    servicesReq.flush({ status: 'UP' });
+    const financeApiReq = httpMock.expectOne(environment.healthChecks.financeApi);
+    financeApiReq.flush({ status: 'UP' });
 
     expect(service.keycloakStatus()).toBe('online');
-    expect(service.gatewayStatus()).toBe('online');
-    expect(service.servicesStatus()).toBe('online');
+    expect(service.userApiStatus()).toBe('online');
+    expect(service.financeApiStatus()).toBe('online');
   });
 
   it('shouldSetStatusToOfflineWhenHealthCheckFails', () => {
@@ -58,14 +58,14 @@ describe('SystemStatusService', () => {
     const keycloakReq = httpMock.expectOne(environment.healthChecks.keycloak);
     keycloakReq.error(new ProgressEvent('error'));
 
-    const gatewayReq = httpMock.expectOne(environment.healthChecks.gateway);
-    gatewayReq.error(new ProgressEvent('error'));
+    const userApiReq = httpMock.expectOne(environment.healthChecks.userApi);
+    userApiReq.error(new ProgressEvent('error'));
 
-    const servicesReq = httpMock.expectOne(environment.healthChecks.services);
-    servicesReq.error(new ProgressEvent('error'));
+    const financeApiReq = httpMock.expectOne(environment.healthChecks.financeApi);
+    financeApiReq.error(new ProgressEvent('error'));
 
     expect(service.keycloakStatus()).toBe('offline');
-    expect(service.gatewayStatus()).toBe('offline');
-    expect(service.servicesStatus()).toBe('offline');
+    expect(service.userApiStatus()).toBe('offline');
+    expect(service.financeApiStatus()).toBe('offline');
   });
 });

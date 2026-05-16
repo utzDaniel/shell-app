@@ -6,10 +6,13 @@ export const environment = {
     realm: 'development',
     clientId: 'shell-app',
   },
-  gatewayUrl: 'http://localhost:8090',
+  backendUrls: [
+    'http://localhost:8081',
+    'http://localhost:8082'
+  ],
   healthChecks: {
     keycloak: 'http://localhost:9999/realms/development',
-    gateway: 'http://localhost:8090/actuator/health',
-    services: 'http://localhost:8091/actuator/health',
+    userApi: '/proxy/user-api/actuator/health',
+    financeApi: '/proxy/finance-api/actuator/health',
   },
 };

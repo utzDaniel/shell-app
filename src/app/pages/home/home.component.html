@@ -35,7 +35,7 @@
     }
 
     @if (authService.hasUserRole()) {
-      <a class="home-card" routerLink="/users">
+      <a class="home-card" routerLink="/perfil">
         <div class="home-card-icon home-card-icon--purple">
           <i class="pi pi-user"></i>
         </div>
@@ -97,36 +97,36 @@
         </li>
         <li class="status-item">
           <div class="status-icon-wrap status-icon-wrap--teal">
-            <i class="pi pi-sitemap"></i>
+            <i class="pi pi-database"></i>
           </div>
           <div class="status-info">
-            <span class="status-name">Gateway API</span>
-            <span class="status-desc">Roteamento e validação</span>
+            <span class="status-name">API Usuários</span>
+            <span class="status-desc">Serviço de usuários</span>
           </div>
-          <span class="status-dot" [class.status-dot--online]="systemStatus.gatewayStatus() === 'online'"
-                                   [class.status-dot--offline]="systemStatus.gatewayStatus() === 'offline'"
-                                   [class.status-dot--checking]="systemStatus.gatewayStatus() === 'checking'">
+          <span class="status-dot" [class.status-dot--online]="systemStatus.userApiStatus() === 'online'"
+                                   [class.status-dot--offline]="systemStatus.userApiStatus() === 'offline'"
+                                   [class.status-dot--checking]="systemStatus.userApiStatus() === 'checking'">
           </span>
-          <span class="status-label" [class.status-label--online]="systemStatus.gatewayStatus() === 'online'"
-                                     [class.status-label--offline]="systemStatus.gatewayStatus() === 'offline'">
-            {{ systemStatus.gatewayStatus() | titlecase }}
+          <span class="status-label" [class.status-label--online]="systemStatus.userApiStatus() === 'online'"
+                                     [class.status-label--offline]="systemStatus.userApiStatus() === 'offline'">
+            {{ systemStatus.userApiStatus() | titlecase }}
           </span>
         </li>
         <li class="status-item">
           <div class="status-icon-wrap status-icon-wrap--teal">
-            <i class="pi pi-database"></i>
+            <i class="pi pi-dollar"></i>
           </div>
           <div class="status-info">
-            <span class="status-name">Serviços de Negócio</span>
-            <span class="status-desc">APIs e bancos de dados</span>
+            <span class="status-name">API Financeiro</span>
+            <span class="status-desc">Serviço financeiro</span>
           </div>
-          <span class="status-dot" [class.status-dot--online]="systemStatus.servicesStatus() === 'online'"
-                                   [class.status-dot--offline]="systemStatus.servicesStatus() === 'offline'"
-                                   [class.status-dot--checking]="systemStatus.servicesStatus() === 'checking'">
+          <span class="status-dot" [class.status-dot--online]="systemStatus.financeApiStatus() === 'online'"
+                                   [class.status-dot--offline]="systemStatus.financeApiStatus() === 'offline'"
+                                   [class.status-dot--checking]="systemStatus.financeApiStatus() === 'checking'">
           </span>
-          <span class="status-label" [class.status-label--online]="systemStatus.servicesStatus() === 'online'"
-                                     [class.status-label--offline]="systemStatus.servicesStatus() === 'offline'">
-            {{ systemStatus.servicesStatus() | titlecase }}
+          <span class="status-label" [class.status-label--online]="systemStatus.financeApiStatus() === 'online'"
+                                     [class.status-label--offline]="systemStatus.financeApiStatus() === 'offline'">
+            {{ systemStatus.financeApiStatus() | titlecase }}
           </span>
         </li>
       </ul>

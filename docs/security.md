@@ -44,15 +44,19 @@ Comportamento do guard:
 
 ## Bearer Token
 
-O `includeBearerTokenInterceptor` injeta automaticamente o token JWT nas requisições HTTP cujo URL começa com `environment.gatewayUrl` (`http://localhost:8090`).
+O `includeBearerTokenInterceptor` injeta automaticamente o token JWT nas requisições HTTP cujo URL começa com qualquer uma das URLs definidas em `environment.backendUrls`.
+
+Como o `HttpClient` é um **singleton compartilhado** via Native Federation (`shareAll`), o interceptor configurado no shell é herdado automaticamente pelos MFEs. Ou seja, qualquer requisição ao backend feita por um MFE também receberá o Bearer token.
 
 Configurado em `app.config.ts`:
 ```typescript
 {
   provide: INCLUDE_BEARER_TOKEN_INTERCEPTOR_CONFIG,
-  useValue: [{ urlPattern: new RegExp(`^${environment.gatewayUrl}`) }],
+  useValue: environment.backendUrls.map((url) => ({ urlPattern: new RegExp(`^${url}`) })),
 }
 ```
+
+Para adicionar um novo backend, basta incluir a URL no array `backendUrls` em `environment.ts`.
 
 ## Erros de Acesso
 
