@@ -1,18 +1,4 @@
 services:
-  keycloak:
-    image: quay.io/keycloak/keycloak:26.1
-    container_name: keycloak
-    command: ["start-dev","--http-port=9999","--import-realm"]
-    environment:
-      KC_BOOTSTRAP_ADMIN_USERNAME: admin
-      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
-    ports:
-      - "9999:9999"
-    volumes:
-      - ./docker/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
-    networks:
-      - app-network
-
   shell-app:
     build:
       context: .
@@ -20,8 +6,6 @@ services:
     container_name: shell-app
     ports:
       - "4200:80"
-    depends_on:
-      - keycloak
     networks:
       - app-network
 
